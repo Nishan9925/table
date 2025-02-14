@@ -3,9 +3,9 @@ import { fetchPosts, TableProps } from "../service/api";
 
 function Mycomp() {
   const [contacts, setContacts] = useState<TableProps[] | null>([]);
-  const [newContact, setNewContact] = useState<TableProps[] | null>([]);
+  const [newContact, setNewContact] = useState("");
 
-  const 
+  // const 
 
   useEffect(() => {
     async function getContacts() {
