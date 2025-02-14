@@ -1,7 +1,7 @@
 import { Button, Modal } from "antd";
 import { useState } from "react";
 import FormComponent from "./FormComponent";
-import { deletePost, postPosts } from "../service/api";
+import { deleteContact, createContact } from "../service/api";
 
 export interface OptionType<T> {
     value: T;
@@ -93,12 +93,12 @@ function Table<T extends {}>({ data, columns, identifierField }: TableProps<T>) 
             return;
         }
 
-        await deletePost(rowId);
+        await deleteContact(rowId);
     };
 
     const handleSubmit = async (values: any) => {
         try {
-            const response = await postPosts(values);
+            const response = await createContact(values);
             setIsModalOpen(false);
             console.log("Data successfully posted:", response);
         } catch (error) {
@@ -119,7 +119,7 @@ function Table<T extends {}>({ data, columns, identifierField }: TableProps<T>) 
                     handleSubmit={handleSubmit}
                 />
             </Modal>
-            <table border={1}>
+            <table>
                 {/* <th> */}
                 {/* <input
                                 type="checkbox"

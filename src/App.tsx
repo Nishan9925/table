@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Table, { ColumnType } from "./components/Table";
-import { fetchPosts, IContact, PositionType } from "./service/api";
+import { fetchContacts, IContact, PositionType } from "./service/api";
 import { DefaultCell, CheckboxCell, SelectCell } from "./components/TableCells";
 import { Spin } from "antd";
 
@@ -29,20 +29,22 @@ function App() {
 
   useEffect(() => {
     async function getContacts() {
-      const data = await fetchPosts();
+      setIsLoading(false);
+      const data = await fetchContacts();
       if (data) {
         setContacts(data);
       }
+      setIsLoading(true);
     }
     getContacts();
   }, []);
 
-  useEffect(() => {
-    const loading = setTimeout(() => {
-      setIsLoading(true);
-    }, ((Math.random() * 0.5) + 0.5) * 1000)
-    return () => clearTimeout(loading);
-  }, []);
+  // useEffect(() => {
+  //   const loading = setTimeout(() => {
+  //     setIsLoading(true);
+  //   }, ((Math.random() * 1) + 1) * 1000)
+  //   return () => clearTimeout(loading);
+  // }, []);
 
   return (
     <div className="wrapper">
