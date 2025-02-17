@@ -1,5 +1,5 @@
 import { Button, Modal } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FormComponent from "./FormComponent";
 import { deleteContact, createContact } from "../service/api";
 
@@ -22,7 +22,7 @@ export interface BaseCellProps<ValueT = any, RowDataT = {}> {
 //     cellProps?: PropsT;
 // }
 
-type ColumnIntermiediateType<DataT extends {}, PropsT> = {
+type ColumnIntermiediateType<DataT extends {}, PropsT extends {}> = {
     [K in keyof DataT]: {
         selector: K,
         title: string;
@@ -31,7 +31,7 @@ type ColumnIntermiediateType<DataT extends {}, PropsT> = {
     }
 }
 
-export type ColumnType<DataT extends {}, PropsT = {}> = ColumnIntermiediateType<DataT, PropsT>[keyof DataT];
+export type ColumnType<DataT extends {}, PropsT extends {} = {}> = ColumnIntermiediateType<DataT, PropsT>[keyof DataT];
 
 export interface TableProps<DataT extends {}> {
     data: DataT[];
@@ -60,18 +60,15 @@ export interface TableProps<DataT extends {}> {
 function Table<T extends {}>({ data, columns, identifierField }: TableProps<T>) {
     const [isDisabled] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
+    const [tableData, setTableData] = useState(data);
 
-    const handleLoading = () => {
-        if (isLoading) return 
-    }
-
-
-
-    console.log(((Math.random() * 0.5) + 0.5) * 1000);
 
     const showModal = () => {
         setIsModalOpen(true);
+    };
+
+    const handleCancel = () => {
+        setIsModalOpen(false);
     };
 
     // const handleDelete = async (id: string) => {
@@ -84,17 +81,33 @@ function Table<T extends {}>({ data, columns, identifierField }: TableProps<T>) 
     //     }
     // };
 
-    const handleDelete = async (row: []) => {
+    // const handleDelete = async (row: any) => {
+    //     const rowId = row[identifierField];
+    //     // console.log("Row", row);
+    //     // console.log("RowID", row[identifierField]);
+    //     if (!rowId) {
+    //         console.error("No identifier found for this row.");
+    //         return;
+    //     }
+    //     await deleteContact(rowId);
+    // };
+
+    const handleDelete = async (row: any) => {
         const rowId = row[identifierField];
-        console.log("Row", row);
-        console.log("RowID", row[identifierField]);
+        console.log("RowId inside HD",rowId);
+        console.log("Data Inside HD:",data);
+
         if (!rowId) {
             console.error("No identifier found for this row.");
             return;
         }
-
-        await deleteContact(rowId);
-    };
+        try {
+            await deleteContact(rowId);
+            setTableData((prevData) => prevData.filter((item) => item[identifierField] !== rowId))
+        } catch (error) {
+            console.error("Error deleting contact:", error);
+        }
+    }
 
     const handleSubmit = async (values: any) => {
         try {
@@ -114,7 +127,7 @@ function Table<T extends {}>({ data, columns, identifierField }: TableProps<T>) 
             >
                 Add
             </Button>
-            <Modal title="Add Contact" open={isModalOpen} footer={null}>
+            <Modal title="Add Contact" open={isModalOpen} onCancel={handleCancel} footer={null}>
                 <FormComponent
                     handleSubmit={handleSubmit}
                 />
@@ -139,7 +152,7 @@ function Table<T extends {}>({ data, columns, identifierField }: TableProps<T>) 
                 </thead>
                 <tbody>
                     {
-                        data?.map((row, rowIndex) => (
+                        tableData?.map((row, rowIndex) => (
                             <tr key={rowIndex}>
                                 {
                                     columns.map(({ CellComponent, selector, cellProps }, colIndex) => (

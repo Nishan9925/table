@@ -12,7 +12,7 @@ const columns: ColumnType<IContact>[] = [
   },
   { title: "Name", selector: "name" },
   {
-    title: "Position", selector: "position", CellComponent: SelectCell, cellProps: {
+    title: "Position", selector: "position", CellComponent: SelectCell<PositionType>, cellProps: {
       options: [
         { value: "user", label: "User" },
         { value: "manager", label: "Manager" },

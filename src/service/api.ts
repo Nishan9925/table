@@ -98,10 +98,10 @@ const fetchWrapper = async <T>(
   }
 };
 
-const sleep = await new Promise((resolve) => setTimeout(resolve, (Math.random() * 1.5 + 1.5) * 1000));
+// const sleep = await new Promise((resolve) => setTimeout(resolve, (Math.random() * 1.5 + 1.5) * 1000));
 
 export const fetchContacts = async (): Promise<IContact[] | null> => {
-  await sleep;
+  // await sleep;
   return await fetchWrapper<IContact[]>(BASE_URL);
 };
 

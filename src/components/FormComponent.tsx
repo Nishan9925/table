@@ -1,5 +1,4 @@
 import { Button, Checkbox, Form, Input, Select } from "antd";
-import { postPosts } from "../service/api";
 
 const positionOptions = [
     { value: "user", label: "User" },
