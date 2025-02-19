@@ -1,0 +1,78 @@
+.wrapper {
+    width: 90%;
+}
+
+.container {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5em;
+}
+
+.table-header {
+    font-size: 2rem;
+}
+
+
+
+tr:nth-child(even) {
+    background-color: lightgray;
+}
+
+tr:nth-child(odd) {
+    background-color: white;
+}
+
+.table {
+    width: 100%;
+}
+
+.thead {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.th {
+    text-align: center;
+    /* width: 10%; */
+}
+
+.tbody tr {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tbody td {
+    padding: 1rem;
+}
+
+.row-td {
+    width: 10%;
+    /* text-align: center; */
+}
+
+.actions {
+    gap: 1.2rem;
+}
+
+.ant-btn {
+    /* padding: 1rem; */
+    height: 0px;
+    width: 0px;
+}
+
+.icon-wrapper {
+    padding: .6rem 1rem;
+    background-color: white;
+    border-radius: .3rem;
+    border: 1px solid #d9d9d9;
+}
+
+.button {
+    width: 10%;
+    height: 2rem;
+    border: 1px solid #d9d9d9;
+}

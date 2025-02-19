@@ -5,7 +5,7 @@ interface SelectCellProps<T> extends BaseCellProps<T> {
     options: OptionType<T>[];
 }
 
-export const DefaultCell = ({ value }: BaseCellProps) => <span>{String(value)}</span>;
+export const DefaultCell = ({ value }: BaseCellProps) => <span>{value}</span>;
 
 export const CheckboxCell = ({ value, rowData, onChange, disabled }: BaseCellProps<boolean>) => {
     return (

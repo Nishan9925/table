@@ -5,8 +5,9 @@ const positionOptions = [
     { value: "manager", label: "Manager" },
 ]
 
-function FormComponent({ handleSubmit }) {
-    // const [form] = Form.useForm();
+function FormComponent({ handleSubmit }:any) {
+    const [form] = Form.useForm();
+    console.log(form);
 
     // const handleSubmit = async (values: any) => {
     //     try {
@@ -18,10 +19,11 @@ function FormComponent({ handleSubmit }) {
     // };
 
     return (
-        <Form  onFinish={handleSubmit}>
+        <Form onFinish={handleSubmit}>
             <Form.Item
                 label="Primary"
                 name="primary"
+                valuePropName="checked"
                 rules={[{ required: false, message: "Primary contact" }]}
             >
                 <Checkbox>Primary</Checkbox>
@@ -29,14 +31,14 @@ function FormComponent({ handleSubmit }) {
             <Form.Item
                 label="Name"
                 name="name"
-                rules={[{ required: true, message: "Write your name" }]}
+                rules={[{ required: false, message: "Write your name" }]}
             >
                 <Input />
             </Form.Item>
             <Form.Item
                 label="Position"
                 name="position"
-                rules={[{ required: true, message: "Choose the position" }]}
+                rules={[{ required: false, message: "Choose the position" }]}
             >
                 <Select 
                     options={positionOptions}
@@ -45,14 +47,14 @@ function FormComponent({ handleSubmit }) {
             <Form.Item
                 label="Email"
                 name="email"
-                rules={[{ required: true, message: "Write your email" }]}
+                rules={[{ required: false, message: "Write your email" }]}
             >
                 <Input />
             </Form.Item>
             <Form.Item
                 label="Phone"
                 name="phone"
-                rules={[{ required: true, message: "Write your phonenumber" }]}
+                rules={[{ required: false, message: "Write your phonenumber" }]}
             >
                 <Input />
             </Form.Item>

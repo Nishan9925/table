@@ -8,7 +8,7 @@ export interface IContact {
   name: string;
   position: PositionType;
   email: string;
-  phonenumber: string;
+  phone: string;
 }
 
 // export const fetchPosts = async (): Promise<IContact[] | null> => {
@@ -112,3 +112,7 @@ export const createContact = async (data: IContact): Promise<IContact | null> =>
 export const deleteContact = async (id: string): Promise<void> => {
   await fetchWrapper<void>(`${BASE_URL}/${id}`, "DELETE");
 };
+
+export const updateContact = async (id: string, updatedContact: Partial<IContact>): Promise<IContact[] | null> => {
+  return await fetchWrapper<IContact>(`${BASE_URL}/${id}`, "PUT", updatedContact);
+}

@@ -20,7 +20,7 @@ const columns: ColumnType<IContact>[] = [
     }
   },
   { title: "Email", selector: "email" },
-  { title: "Phone", selector: "phonenumber" },
+  { title: "Phone", selector: "phone" },
 ];
 
 function App() {
@@ -54,6 +54,7 @@ function App() {
             columns={columns}
             data={contacts}
             identifierField="id"
+            IS_ACTIONS_AVAILABLE={true}
           />
           : <Spin />
       }
