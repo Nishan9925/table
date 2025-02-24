@@ -1,12 +1,10 @@
 import { Button, Form, Input, Modal, Tooltip } from "antd";
 import { useEffect, useState } from "react";
 import FormComponent from "./FormComponent";
-import { deleteContact, createContact } from "../service/api";
-import { DeleteOutlined, EditOutlined, StopOutlined } from "@ant-design/icons";
+import { deleteContact, createContact, updateContact, fetchContacts, IContact } from "../service/api";
+import { DeleteOutlined, EditOutlined, SaveOutlined, StopOutlined } from "@ant-design/icons";
 import TableHeader from "./TableHeader";
 import SearchTab from "./SearchTab";
-
-const { Search } = Input;
 
 export interface OptionType<T> {
     value: T;
@@ -42,7 +40,10 @@ export interface TableProps<DataT extends {}> {
     data: DataT[];
     columns: ColumnType<DataT, {}>[];
     identifierField: keyof DataT;
-    IS_ACTIONS_AVAILABLE: boolean;
+    editable: boolean;
+    rowDelete?: (row: IContact) => void | Promise<void>;
+    rowSubmit?: (data: IContact) => Promise<void>;
+    rowEdit?: (row: IContact) => Promise<void>;
 }
 
 
@@ -64,12 +65,20 @@ export interface TableProps<DataT extends {}> {
 //     type: keyof typeof obj
 // }
 
-function Table<T extends {}>({ data, columns, identifierField, IS_ACTIONS_AVAILABLE }: TableProps<T>) {
+// const [form] = Form.useForm();
+
+
+
+function Table<T extends {}>({ data, columns, identifierField, editable, editingRowId, updatedValues, rowDelete, rowSubmit, rowEdit, handleInputChange, handleSave, handleCancelEdit }: TableProps<T>) {
     const [isDisabled] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [tableData, setTableData] = useState(data);
-    const [isEditActive, setIsEditActive] = useState(false);
+    // const [tableData, setTableData] = useState(data);
+    // const [isEditActive, setIsEditActive] = useState(false);
+    // const [editingRowId, setEditingRowId] = useState<string | null>(null);
+    // const [updatedValues, setUpdatedValues] = useState<Record<string, any>>({});
     // console.log("tabledata",tableData);
+
+    console.log("Data passed", data);
 
     const showModal = () => {
         setIsModalOpen(true);
@@ -79,120 +88,155 @@ function Table<T extends {}>({ data, columns, identifierField, IS_ACTIONS_AVAILA
         setIsModalOpen(false);
     };
 
-    const handleDelete = async (row: any) => {
-        const rowId = row[identifierField];
-        console.log("Row", row);
-        console.log("RowId inside HD", rowId);
-        console.log("Data Inside HD:", data);
-        if (!rowId) {
-            console.error("No identifier found for this row.");
-            return;
-        }
-        try {
-            await deleteContact(rowId);
-            setTableData((prevData) => prevData.filter((item) => item[identifierField] !== rowId))
-        } catch (error) {
-            console.error("Error deleting contact:", error);
-        }
-    };
+    // const handleDelete = async (row: any) => {
+    //     const rowId = row[identifierField];
+    //     console.log("Data1", data);
 
-    const handleSubmit = async (data: any) => {
-        // console.log(values);
-        try {
-            const response = await createContact(data);
-            setTableData((prevData) => [...prevData, response]);
-            setIsModalOpen(false);
-            // form.resetFields();
-            console.log("Data successfully posted:", response);
-        } catch (error) {
-            console.error("Failed to post data:", error);
-        }
-    };
+    //     if (!rowId) return;
 
-    const handleUpdate = async (data: any) => {
-        const rowId = editingRow[identifierField];
-        try {
-            const response = await updateContact(rowId, values);
-            setTableData((prevData) =>
-                prevData.map((item) => (item[identifierField] === rowId ? { ...item, ...response } : item))
-            );
-            setIsModalOpen(false);
-            setEditingRow(null);
-        } catch (error) {
-            console.error("Failed to update data:", error);
-        }
-    };
+    //     try {
+    //         await deleteContact(rowId);
+    //         await fetchContacts();
+    //         console.log("Data2", data);
+    //         // forceRender({});
+    //     } catch (error) {
+    //         console.error("Error deleting contact:", error);
+    //     }
+    //     console.log("Data3", data);
+    // };
+
+
+    // const handleDelete = async (row: any) => {
+    //     const rowId = row[identifierField];
+    //     console.log("Row", row);
+    //     console.log("RowId inside HD", rowId);
+    //     console.log("Data Inside HD:", data);
+    //     if (!rowId) {
+    //         console.error("No identifier found for this row.");
+    //         return;
+    //     }
+    //     try {
+    //         await deleteContact(rowId);
+    //         // setTableData((prevData) => prevData.filter((item) => item[identifierField] !== rowId))
+    //         data.filter((item) => item[identifierField] !== rowId);
+    //     } catch (error) {
+    //         console.error("Error deleting contact:", error);
+    //     }
+    //     console.log("Second data",data);
+    // };
+
+
+
+    // const handleEdit = (rowId: string) => {
+    //     setEditingRowId(rowId);
+    //     setUpdatedValues(tableData.find(row => row[identifierField] === rowId) || {});
+    // };
+
+    // const handleInputChange = (key: string, value: any) => {
+    //     setUpdatedValues(prev => ({ ...prev, [key]: value }));
+    // };
+
+    // const handleSave = async (rowId: string) => {
+    //     try {
+    //         const response = await updateContact(rowId, updatedValues);
+    //         setTableData(prevData =>
+    //             prevData.map(row =>
+    //                 row[identifierField] === rowId ? { ...row, ...response } : row
+    //             )
+    //         );
+    //         setEditingRowId(null);
+    //     } catch (error) {
+    //         console.error("Failed to update data:", error);
+    //     }
+    // };
+
+    // const handleCancelEdit = () => {
+    //     setEditingRowId(null);
+    //     setUpdatedValues({});
+    // };
 
     return (
-        <section>
+        <section className="section-table">
             <TableHeader
                 showModal={showModal}
             />
-            <SearchTab />
+            <>
+                <SearchTab />
+            </>
             <Modal title="Add Contact" open={isModalOpen} onCancel={handleCancel} footer={null}>
                 <FormComponent
-                    handleSubmit={handleSubmit}
+                    handleSubmit={rowSubmit}
                 />
             </Modal>
             <table className="table">
-                <tbody className="tbody">
-                    <tr className="container thead">
-                        {
-                            columns.map((column, index) => (
-                                <th className="th"
-                                    key={index}>
-                                    {column.title}
-                                </th>
-                            ))
-                        }
-                        {
-                            IS_ACTIONS_AVAILABLE && <th>Actions</th>
-                        }
+                <thead>
+                    <tr>
+                        {columns.map((column, index) => (
+                            <th key={index} className="th">
+                                {column.title}
+                            </th>
+                        ))}
+                        {editable && <th className="th">Actions</th>}
                     </tr>
-                    {
-                        tableData?.map((row, rowIndex) => (
-                            <tr
-                                key={rowIndex}>
-                                {
-                                    columns.map(({ CellComponent, selector, cellProps }, colIndex) => (
-                                        <td className="row-td"
-                                            key={colIndex}>
-                                            {CellComponent
-                                                ?
-                                                <CellComponent
-                                                    value={row[selector]}
-                                                    {...(cellProps) || {}}
-                                                    disabled={isDisabled}
-                                                />
-                                                :
-                                                row[selector] as string
-                                            }
-                                        </td>
-                                    ))
-                                }
-                                {
-                                    IS_ACTIONS_AVAILABLE &&
-                                    <td className="container actions">
-                                        <Button onClick={() => handleDelete(row)}>
-                                            {
-                                                isEditActive ?
-                                                    <span>
-                                                        <Tooltip title="Edit" color="yellow"><span className="icon-wrapper"><StopOutlined /></span></Tooltip>
-                                                    </span>
-                                                    :
-                                                    <Tooltip title="Delete" color="red"><span className="icon-wrapper"><DeleteOutlined /></span></Tooltip>
-                                            }
-                                        </Button>
-                                        <Button onClick={() => { setIsEditActive(!isEditActive); console.log(isEditActive) }}>
-                                            <span className="icon-wrapper"><EditOutlined /></span>
-                                        </Button>
+                </thead>
+                <tbody>
+                    {data?.map((row, rowIndex) => (
+                        <tr key={rowIndex}>
+                            {columns.map(({ CellComponent, cellProps, selector }, colIndex) => (
+                                <td key={colIndex} className="td">
+                                    {editingRowId === row[identifierField] ? (
+                                        CellComponent ? (
+                                            <CellComponent
+                                                value={row[selector]}
+                                                onChange={(value) => handleInputChange(selector, value)}
+                                                {...(cellProps || {})}
+                                            />
+                                        ) : (
+                                            <input
+                                                value={updatedValues[selector]}
+                                                onChange={(e) => handleInputChange(selector, e.target.value)}
+                                                className="input-field"
+                                            />
+                                        )
+                                    ) : (
+                                        CellComponent ? (
+                                            <CellComponent
+                                                value={row[selector]}
+                                                {...(cellProps || {})}
+                                                disabled={true}
+                                            />
+                                        ) : (
+                                            row[selector] as string
+                                        )
+                                    )}
+                                </td>
+                            ))}
+                            {
+                                editable && (
+                                    <td className="actions">
+                                        {editingRowId === row[identifierField] ? (
+                                            <>
+                                                <Button className="icon-wrapper" onClick={handleCancelEdit}><Tooltip title="Cancel" color="yellow"><span ><StopOutlined /></span></Tooltip></Button>
+                                                <Button className="icon-wrapper" onClick={() => handleSave(row[identifierField] as string)}><Tooltip title="Save" color="green"><span><SaveOutlined /></span></Tooltip></Button>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Button className="icon-wrapper" onClick={() => rowDelete(row)}>
+                                                    <Tooltip title="Delete" color="red"><span ><DeleteOutlined /></span></Tooltip>
+                                                </Button>
+                                                <Button className="icon-wrapper" onClick={() => rowEdit(row[identifierField] as string)}>
+                                                    <Tooltip title="Edit" color="blue"><span ><EditOutlined /></span></Tooltip>
+                                                </Button>
+                                            </>
+                                        )}
                                     </td>
-                                }
-                            </tr>
-                        ))
-                    }
+                                )
+                            }
+                        </tr>
+                    ))}
                 </tbody>
             </table>
+
         </section>
     );
 };

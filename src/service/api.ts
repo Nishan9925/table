@@ -11,6 +11,18 @@ export interface IContact {
   phone: string;
 }
 
+type identifierType = IContact[keyof IContact];
+
+export type typesss = {
+  type: keyof identifierType;
+}
+
+function typeId <T, K extends keyof T> (value: T, key: K) {
+  return value[key]
+}
+
+type typeIDDD = keyof IContact
+ 
 // export const fetchPosts = async (): Promise<IContact[] | null> => {
 //   try {
 //     const response = await fetch(`${BASE_URL}`);
@@ -114,5 +126,5 @@ export const deleteContact = async (id: string): Promise<void> => {
 };
 
 export const updateContact = async (id: string, updatedContact: Partial<IContact>): Promise<IContact[] | null> => {
-  return await fetchWrapper<IContact>(`${BASE_URL}/${id}`, "PUT", updatedContact);
+  return await fetchWrapper<IContact[]>(`${BASE_URL}/${id}`, "PUT", updatedContact);
 }

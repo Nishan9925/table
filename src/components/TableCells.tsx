@@ -18,7 +18,11 @@ export const CheckboxCell = ({ value, rowData, onChange, disabled }: BaseCellPro
 };
 
 export const SelectCell = <ValueType extends string,> ({ value, onChange, disabled, options }: SelectCellProps<ValueType>) => (
+    disabled ? 
+    <span style={{textTransform: "uppercase"}}>{value}</span>
+    :
     <Select
+        className={disabled ? "select-styles" : ""}
         style={{width: "100%"}}
         defaultValue={value}
         onChange={(val) => !disabled && onChange?.(val)}

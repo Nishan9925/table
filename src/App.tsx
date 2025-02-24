@@ -1,63 +1,87 @@
-import { useEffect, useState } from "react";
-import Table, { ColumnType } from "./components/Table";
-import { fetchContacts, IContact, PositionType } from "./service/api";
-import { DefaultCell, CheckboxCell, SelectCell } from "./components/TableCells";
-import { Spin } from "antd";
+// import { useCallback, useEffect, useState } from "react";
+// import Table, { ColumnType } from "./components/Table";
+// import { deleteContact, fetchContacts, IContact, PositionType, sleep, updateContact } from "./service/api";
+// import { DefaultCell, CheckboxCell, SelectCell } from "./components/TableCells";
+// import { Spin } from "antd";
 
-const columns: ColumnType<IContact>[] = [
-  {
-    title: "Primary",
-    selector: "primary",
-    CellComponent: CheckboxCell
-  },
-  { title: "Name", selector: "name" },
-  {
-    title: "Position", selector: "position", CellComponent: SelectCell<PositionType>, cellProps: {
-      options: [
-        { value: "user", label: "User" },
-        { value: "manager", label: "Manager" },
-      ]
-    }
-  },
-  { title: "Email", selector: "email" },
-  { title: "Phone", selector: "phone" },
-];
+import TableComponent from "./layouts/TableComponent";
+
+// const columns: ColumnType<IContact>[] = [
+//   {
+//     title: "Primary",
+//     selector: "primary",
+//     CellComponent: CheckboxCell
+//   },
+//   { title: "Name", selector: "name" },
+//   {
+//     title: "Position", selector: "position", CellComponent: SelectCell<PositionType>, cellProps: {
+//       options: [
+//         { value: "user", label: "User" },
+//         { value: "manager", label: "Manager" },
+//       ]
+//     }
+//   },
+//   { title: "Email", selector: "email" },
+//   { title: "Phone", selector: "phone" },
+// ];
 
 function App() {
-  const [contacts, setContacts] = useState<IContact[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  // const [contacts, setContacts] = useState<IContact[]>([]);
+  // const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    async function getContacts() {
-      setIsLoading(false);
-      const data = await fetchContacts();
-      if (data) {
-        setContacts(data);
-      }
-      setIsLoading(true);
-    }
-    getContacts();
-  }, []);
+// const getContacts = async () => {
+//     await fetchContacts();
+//   }
+//   const data = getContacts();
+
+  // const handleDelete = useCallback((async (row: IContact,) => {
+  //   const rowId = row.id;
+  //   console.log("Data1", contacts);
+
+  //   if (!rowId) return;
+
+  //   try {
+  //     await deleteContact(rowId);
+  //     const updatedContacts = await fetchContacts();
+  //     setContacts(updatedContacts);
+  //     console.log("Data2", contacts);
+  //   } catch (error) {
+  //     console.error("Error deleting contact:", error);
+  //   }
+  //   console.log("Data3", contacts);
+  // }), []);
 
   // useEffect(() => {
-  //   const loading = setTimeout(() => {
+  //   async function getContacts() {
+  //     // await sleep;
   //     setIsLoading(true);
-  //   }, ((Math.random() * 1) + 1) * 1000)
-  //   return () => clearTimeout(loading);
+  //     const data = await fetchContacts();
+  //     if (data) {
+  //       setContacts(data);
+  //       console.log("isArray",Array.isArray(data));
+  //     }
+  //     setIsLoading(false);
+  //   }
+  //   getContacts();
   // }, []);
 
   return (
     <div className="wrapper">
-      {
+      {/* {
         isLoading ?
-          <Table
-            columns={columns}
-            data={contacts}
-            identifierField="id"
-            IS_ACTIONS_AVAILABLE={true}
-          />
-          : <Spin />
-      }
+         <Spin
+        size="large"
+        />
+        :
+        <Table
+          columns={columns}
+          data={contacts}
+          identifierField="id"
+          editable={true}
+          rowDelete={handleDelete}
+        />
+      } */}
+      <TableComponent />
     </div>
   );
 };

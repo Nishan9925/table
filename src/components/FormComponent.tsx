@@ -3,11 +3,9 @@ import { Button, Checkbox, Form, Input, Select } from "antd";
 const positionOptions = [
     { value: "user", label: "User" },
     { value: "manager", label: "Manager" },
-]
+];
 
 function FormComponent({ handleSubmit }:any) {
-    const [form] = Form.useForm();
-    console.log(form);
 
     // const handleSubmit = async (values: any) => {
     //     try {
@@ -41,6 +39,7 @@ function FormComponent({ handleSubmit }:any) {
                 rules={[{ required: false, message: "Choose the position" }]}
             >
                 <Select 
+                    placeholder="Choose a position"
                     options={positionOptions}
                 />
             </Form.Item>
@@ -58,7 +57,7 @@ function FormComponent({ handleSubmit }:any) {
             >
                 <Input />
             </Form.Item>
-            <Button htmlType="submit">
+            <Button htmlType="submit" className="button">
                 Submit
             </Button>
         </Form>
