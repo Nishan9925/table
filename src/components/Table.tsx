@@ -68,7 +68,6 @@ export interface TableProps<DataT extends {}> {
 // const [form] = Form.useForm();
 
 
-
 function Table<T extends {}>({ data, columns, identifierField, editable, editingRowId, updatedValues, rowDelete, rowSubmit, rowEdit, handleInputChange, handleSave, handleCancelEdit }: TableProps<T>) {
     const [isDisabled] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);

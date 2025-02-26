@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
-import Table, { ColumnType } from "../components/Table";
+import Table, { BaseCellProps, ColumnType } from "../components/Table";
 import { createContact, deleteContact, fetchContacts, IContact, PositionType, updateContact } from "../service/api";
-import { CheckboxCell, SelectCell } from "../components/TableCells";
+import { SelectCell } from "../components/TableCells/SelectCell";
+import { CheckboxCell } from "../components/TableCells/CheckboxCell";
+
+
 
 const columns: ColumnType<IContact>[] = [
     {
@@ -14,8 +17,10 @@ const columns: ColumnType<IContact>[] = [
         title: "Position", selector: "position", CellComponent: SelectCell<PositionType>, cellProps: {
             options: [
                 { value: "user", label: "User" },
-                { value: "manager", label: "Manager" },
-            ]
+                { value: "manager", label: "Manager", children: [
+                    {value: "manager", label: "Manager"}
+                ] },
+            ],
         }
     },
     { title: "Email", selector: "email" },
@@ -24,34 +29,35 @@ const columns: ColumnType<IContact>[] = [
 
 const identifierField = "id";
 
+export const DefaultCell = ({ value }: BaseCellProps) => <span className="string-default">{value}</span>;
+
 function TableComponent() {
     const [contacts, setContacts] = useState<IContact[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingRowId, setEditingRowId] = useState<string | null>(null);
     const [updatedValues, setUpdatedValues] = useState<Record<string, any>>({});
+    const [confirm, setConfirm] = useState(false);
 
     // const getContacts = async () => {
     //     await fetchContacts();
     //   }
     //   const data = getContacts();
 
-    const handleSubmit = async (data: any) => {
-        console.log("before try");
+    const handleSubmit = useCallback(( async (data: any) => {
+        // console.log("before try");
         try {
             const response = await createContact(data);
             setContacts((prevData) => [...prevData, response]);
-            setIsModalOpen(false);
-            console.log("in try");
+            setIsModalOpen(isModalOpen);
+            // console.log("in try");
 
             // form.resetFields();
-            console.log("Data successfully posted:", response);
         } catch (error) {
-            console.error("Failed to post data:", error);
+            console.error("Erro in Submit:", error);
         }
-        console.log("after try");
-
-    };
+        // console.log("after try");
+    }), [contacts]);
 
     const handleEdit = (rowId: string) => {
         setEditingRowId(rowId);
@@ -91,12 +97,12 @@ function TableComponent() {
             await deleteContact(rowId);
             const updatedContacts = await fetchContacts();
             setContacts(updatedContacts);
-            console.log("Data2", contacts);
+            // console.log("Data2", contacts);
         } catch (error) {
             console.error("Error deleting contact:", error);
         }
         console.log("Data3", contacts);
-    }), []);
+    }), [contacts]);
 
     useEffect(() => {
         async function getContacts() {

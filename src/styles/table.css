@@ -21,15 +21,16 @@
 
 .section-table {
     border-radius: 10px;
-    /* box-shadow: 3px 3px 3px 3px gray; */
     box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2), 
               -3px -3px 10px rgba(255, 255, 255, 0.8);
     overflow: hidden;
     padding: 12px;
+    width: 100%;
+    overflow-x: auto;
 }
 
 tr:nth-child(even) {
-    background-color: lightgray;
+    background-color: lightgreen;
 }
 
 tr:nth-child(odd) {
@@ -46,6 +47,10 @@ tr:nth-child(odd) {
     justify-content: space-between;
 }
 
+.thead tr {
+    width: 10%;
+}
+
 .th {
     text-align: center;
 }
@@ -57,7 +62,6 @@ tr:nth-child(odd) {
 }
 
 .tbody td {
-    /* padding: 2rem; */
     vertical-align: middle;
     height: 100%;
     width: 100%;
@@ -76,6 +80,7 @@ tr:nth-child(odd) {
 
 .td {
     font-size: 1rem;
+    overflow: hidden;
 }
 
 .actions {
@@ -92,8 +97,10 @@ tr:nth-child(odd) {
 }
 
 .table {
-    width: 100%;
+    max-width: 100%;
     border-collapse: collapse;
+    table-layout: fixed;
+    /* overflow-y: auto; */
 }
 
 th, td {
@@ -111,27 +118,29 @@ th {
     white-space: nowrap;
     display: flex;
     justify-content: space-around;
-    /* align-items: center; */
 }
 
 .btn {
     padding: 5px 10px;
     margin: 2px;
     border: none;
-    /* cursor: pointer; */
+    cursor: pointer;
 }
 
 .input-field {
     font-size: 1rem;
-    border: none;
+    /* border: none; */
     text-align: center;
     width: 100%;
     background-color: transparent;
+    font: inherit;
 }
 
-.select-styles {
-    
-}
+/* .string-default {
+    width: 70px;
+    height: 100px;
+    overflow: hidden;
+} */
 
 /* .thead .tr {
     width: calc(100% - 10%);
