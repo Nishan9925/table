@@ -3,6 +3,7 @@ import Table, { BaseCellProps, ColumnType } from "../components/Table";
 import { createContact, deleteContact, fetchContacts, IContact, PositionType, updateContact } from "../service/api";
 import { SelectCell } from "../components/TableCells/SelectCell";
 import { CheckboxCell } from "../components/TableCells/CheckboxCell";
+import { message } from "antd";
 
 
 
@@ -17,9 +18,11 @@ const columns: ColumnType<IContact>[] = [
         title: "Position", selector: "position", CellComponent: SelectCell<PositionType>, cellProps: {
             options: [
                 { value: "user", label: "User" },
-                { value: "manager", label: "Manager", children: [
-                    {value: "manager", label: "Manager"}
-                ] },
+                {
+                    value: "manager", label: "Manager", children: [
+                        { value: "manager", label: "Manager" }
+                    ]
+                },
             ],
         }
     },
@@ -38,13 +41,14 @@ function TableComponent() {
     const [editingRowId, setEditingRowId] = useState<string | null>(null);
     const [updatedValues, setUpdatedValues] = useState<Record<string, any>>({});
     const [confirm, setConfirm] = useState(false);
+    const [messageApi, contextHolder] = message.useMessage();
 
     // const getContacts = async () => {
     //     await fetchContacts();
     //   }
     //   const data = getContacts();
 
-    const handleSubmit = useCallback(( async (data: any) => {
+    const handleSubmit = useCallback((async (data: any) => {
         // console.log("before try");
         try {
             const response = await createContact(data);
@@ -54,7 +58,7 @@ function TableComponent() {
 
             // form.resetFields();
         } catch (error) {
-            console.error("Erro in Submit:", error);
+            console.error("Error in Submit:", error);
         }
         // console.log("after try");
     }), [contacts]);
@@ -68,7 +72,9 @@ function TableComponent() {
         setUpdatedValues(prev => ({ ...prev, [key]: value }));
     };
 
-    const handleSave = async (rowId: string) => {
+    const handleSave = async (rowId: string, row: IContact) => {
+        console.log(rowId);
+        const theStore = {};
         try {
             const response = await updateContact(rowId, updatedValues);
             setContacts(prevData =>
@@ -76,7 +82,19 @@ function TableComponent() {
                     row[identifierField] === rowId ? { ...row, ...response } : row
                 )
             );
+            console.log("updatedValues:", updatedValues);
             setEditingRowId(null);
+            // if (!theStore[rowId]) {
+            //     theStore[rowId] = updatedValues;
+            // };
+            // if (theStore[rowId] = theStore.rowId) {
+                
+            // };
+            messageApi.open({
+                type: "success",
+                content: `The contact of ${row.name} has been changed `,
+            })
+            console.log("theStore: ", theStore);
         } catch (error) {
             console.error("Failed to update data:", error);
         }
@@ -97,6 +115,10 @@ function TableComponent() {
             await deleteContact(rowId);
             const updatedContacts = await fetchContacts();
             setContacts(updatedContacts);
+            messageApi.open({
+                type: "success",
+                content: `The contact of ${row.name} has been deleted `,
+            })
             // console.log("Data2", contacts);
         } catch (error) {
             console.error("Error deleting contact:", error);
@@ -111,7 +133,7 @@ function TableComponent() {
             const data = await fetchContacts();
             if (data) {
                 setContacts(data);
-                console.log("isArray", Array.isArray(data));
+                // console.log("isArray", Array.isArray(data));
             }
             setIsLoading(false);
         }
@@ -132,6 +154,7 @@ function TableComponent() {
             rowEdit={handleEdit}
             handleInputChange={handleInputChange}
             handleSave={handleSave}
+            contextHolder={contextHolder}
         />
     )
 }

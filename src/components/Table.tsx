@@ -1,4 +1,4 @@
-import { Button, Form, Input, Modal, Tooltip } from "antd";
+import { Button, Form, Input, Modal, Popconfirm, Tooltip } from "antd";
 import { useEffect, useState } from "react";
 import FormComponent from "./FormComponent";
 import { deleteContact, createContact, updateContact, fetchContacts, IContact } from "../service/api";
@@ -68,7 +68,21 @@ export interface TableProps<DataT extends {}> {
 // const [form] = Form.useForm();
 
 
-function Table<T extends {}>({ data, columns, identifierField, editable, editingRowId, updatedValues, rowDelete, rowSubmit, rowEdit, handleInputChange, handleSave, handleCancelEdit }: TableProps<T>) {
+function Table<T extends {}>({ data,
+    columns,
+    identifierField,
+    editable,
+    editingRowId,
+    updatedValues,
+    rowDelete,
+    rowSubmit,
+    rowEdit,
+    handleInputChange,
+    handleSave,
+    handleCancelEdit,
+    contextHolder,
+    success }: TableProps<T>) {
+
     const [isDisabled] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     // const [tableData, setTableData] = useState(data);
@@ -77,7 +91,7 @@ function Table<T extends {}>({ data, columns, identifierField, editable, editing
     // const [updatedValues, setUpdatedValues] = useState<Record<string, any>>({});
     // console.log("tabledata",tableData);
 
-    console.log("Data passed", data);
+    // console.log("Data passed", data);
 
     const showModal = () => {
         setIsModalOpen(true);
@@ -156,6 +170,7 @@ function Table<T extends {}>({ data, columns, identifierField, editable, editing
 
     return (
         <section className="section-table">
+            {contextHolder}
             <TableHeader
                 showModal={showModal}
             />
@@ -217,22 +232,29 @@ function Table<T extends {}>({ data, columns, identifierField, editable, editing
                                         {editingRowId === row[identifierField] ? (
                                             <>
                                                 <Tooltip title="Cancel" color="yellow">
-                                                    <Button className="icon-wrapper" onClick={handleCancelEdit}><span ><StopOutlined /></span></Button>
+                                                    <Button className="icon-wrapper" onClick={handleCancelEdit}><StopOutlined /></Button>
                                                 </Tooltip>
                                                 <Tooltip title="Save" color="green">
-                                                    <Button className="icon-wrapper" onClick={() => handleSave(row[identifierField] as string)}><span><SaveOutlined /></span></Button>
-                                                </Tooltip>
+                                                    <Button className="icon-wrapper" onClick={() => handleSave(row[identifierField] as string, row)}><SaveOutlined /></Button></Tooltip>
                                             </>
                                         ) : (
                                             <>
-                                                <Tooltip title="Delete" color="red">
-                                                    <Button className="icon-wrapper" onClick={() => rowDelete(row)}>
-                                                        <span ><DeleteOutlined /></span>
-                                                    </Button>
-                                                </Tooltip>
+                                                <Popconfirm
+                                                    title="Delete the contact"
+                                                    description="Are you sure to delete this contact ?"
+                                                    onConfirm={() => rowDelete(row)}
+                                                    okText="Yes"
+                                                    cancelText="No"
+                                                >
+                                                    <Tooltip title="Delete" color="red">
+                                                        <Button className="icon-wrapper">
+                                                            <DeleteOutlined />
+                                                        </Button>
+                                                    </Tooltip>
+                                                </Popconfirm>
                                                 <Tooltip title="Edit" color="blue">
                                                     <Button className="icon-wrapper" onClick={() => rowEdit(row[identifierField] as string)}>
-                                                        <span ><EditOutlined /></span>
+                                                        <EditOutlined />
                                                     </Button>
                                                 </Tooltip>
                                             </>
