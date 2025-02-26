@@ -183,6 +183,7 @@ function Table<T extends {}>({ data, columns, identifierField, editable, editing
                         <tr key={rowIndex}>
                             {columns.map(({ CellComponent, cellProps, selector }, colIndex) => (
                                 <td key={colIndex} className="td">
+                                    {/* chnage this conditionals, try to change the way they check and have only one conditin to check */}
                                     {editingRowId === row[identifierField] ? (
                                         CellComponent ? (
                                             <CellComponent
@@ -215,17 +216,25 @@ function Table<T extends {}>({ data, columns, identifierField, editable, editing
                                     <td className="actions">
                                         {editingRowId === row[identifierField] ? (
                                             <>
-                                                <Button className="icon-wrapper" onClick={handleCancelEdit}><Tooltip title="Cancel" color="yellow"><span ><StopOutlined /></span></Tooltip></Button>
-                                                <Button className="icon-wrapper" onClick={() => handleSave(row[identifierField] as string)}><Tooltip title="Save" color="green"><span><SaveOutlined /></span></Tooltip></Button>
+                                                <Tooltip title="Cancel" color="yellow">
+                                                    <Button className="icon-wrapper" onClick={handleCancelEdit}><span ><StopOutlined /></span></Button>
+                                                </Tooltip>
+                                                <Tooltip title="Save" color="green">
+                                                    <Button className="icon-wrapper" onClick={() => handleSave(row[identifierField] as string)}><span><SaveOutlined /></span></Button>
+                                                </Tooltip>
                                             </>
                                         ) : (
                                             <>
-                                                <Button className="icon-wrapper" onClick={() => rowDelete(row)}>
-                                                    <Tooltip title="Delete" color="red"><span ><DeleteOutlined /></span></Tooltip>
-                                                </Button>
-                                                <Button className="icon-wrapper" onClick={() => rowEdit(row[identifierField] as string)}>
-                                                    <Tooltip title="Edit" color="blue"><span ><EditOutlined /></span></Tooltip>
-                                                </Button>
+                                                <Tooltip title="Delete" color="red">
+                                                    <Button className="icon-wrapper" onClick={() => rowDelete(row)}>
+                                                        <span ><DeleteOutlined /></span>
+                                                    </Button>
+                                                </Tooltip>
+                                                <Tooltip title="Edit" color="blue">
+                                                    <Button className="icon-wrapper" onClick={() => rowEdit(row[identifierField] as string)}>
+                                                        <span ><EditOutlined /></span>
+                                                    </Button>
+                                                </Tooltip>
                                             </>
                                         )}
                                     </td>

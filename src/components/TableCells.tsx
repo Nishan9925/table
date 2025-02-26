@@ -5,7 +5,7 @@
 //     options: OptionType<T>[];
 // }
 
-export const DefaultCell = ({ value }: BaseCellProps) => <span className="string-default">{value}</span>;
+// export const DefaultCell = ({ value }: BaseCellProps) => <span className="string-default">{value}</span>;
 
 // export const CheckboxCell = ({ value, rowData, onChange, disabled }: BaseCellProps<boolean>) => {
 //     return (
