@@ -80,8 +80,7 @@ function Table<T extends {}>({ data,
     handleInputChange,
     handleSave,
     handleCancelEdit,
-    contextHolder,
-    success }: TableProps<T>) {
+    contextHolder }: TableProps<T>) {
 
     const [isDisabled] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -235,7 +234,10 @@ function Table<T extends {}>({ data,
                                                     <Button className="icon-wrapper" onClick={handleCancelEdit}><StopOutlined /></Button>
                                                 </Tooltip>
                                                 <Tooltip title="Save" color="green">
-                                                    <Button className="icon-wrapper" onClick={() => handleSave(row[identifierField] as string, row)}><SaveOutlined /></Button></Tooltip>
+                                                    <Button className="icon-wrapper" onClick={() => handleSave(row[identifierField] as string, row)}>
+                                                        <SaveOutlined />
+                                                    </Button>
+                                                </Tooltip>
                                             </>
                                         ) : (
                                             <>

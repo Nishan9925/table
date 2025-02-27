@@ -119,7 +119,7 @@ function TableComponent() {
                 type: "success",
                 content: `The contact of ${row.name} has been deleted `,
             })
-            // console.log("Data2", contacts);
+            console.log("Data2", contacts);
         } catch (error) {
             console.error("Error deleting contact:", error);
         }

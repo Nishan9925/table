@@ -24,7 +24,7 @@ function FormComponent({ handleSubmit }:any) {
                 valuePropName="checked"
                 rules={[{ required: false, message: "Primary contact" }]}
             >
-                <Checkbox>Primary</Checkbox>
+                <Checkbox />
             </Form.Item>
             <Form.Item
                 label="Name"
