@@ -136,6 +136,10 @@ th {
     font: inherit;
 }
 
+.ant-checkbox-wrapper-disabled {
+    color: black;
+}
+
 /* .string-default {
     width: 70px;
     height: 100px;

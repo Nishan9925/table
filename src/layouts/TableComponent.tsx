@@ -5,8 +5,6 @@ import { SelectCell } from "../components/TableCells/SelectCell";
 import { CheckboxCell } from "../components/TableCells/CheckboxCell";
 import { message } from "antd";
 
-
-
 const columns: ColumnType<IContact>[] = [
     {
         title: "Primary",
